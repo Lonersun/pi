@@ -11,14 +11,15 @@ class Beep(object):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.pin, GPIO.OUT)
 
-    def interval_beep(self, interval=0.5, time_long=1):
+    def interval_beep(self, interval=0.5, frequency=1):
         """
         蜂鸣器鸣叫函数
         :param interval:
-        :param long:
+        :param frequency:
         :return:
         """
-        while int(time_long * 2 / interval):
+        while frequency:
+            frequency -= 1
             GPIO.output(self.pin, GPIO.LOW)
             time.sleep(interval)
             GPIO.output(self.pin, GPIO.HIGH)
