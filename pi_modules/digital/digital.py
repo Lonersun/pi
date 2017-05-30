@@ -1,8 +1,8 @@
-#!/usr/bin/env python
 # encoding: utf-8
 
 import RPi.GPIO
 import time
+from pi_modules.temperature import htu
 
 
 # 定义单个数码管各段led对应的GPIO口
@@ -205,16 +205,18 @@ def show_time():
     RPi.GPIO.cleanup()
 
 
-def show_temperature(temperature, humidity):
+def show_temperature():
     """
 
-    :param temperature:
-    :param humidity:
     :return:
     """
     try:
+        htc_server = htu.HTU21D()
         t = 0.005
         while True:
+            temperature = htc_server.readTemperatureData()
+            humidity = htc_server.readHumidityData()
+            print "当前温度：{0}, 湿度：{1}".format(temperature, humidity)
             time.sleep(t)
             showDigit(1, int(int(temperature) / 10), False)
             time.sleep(t)

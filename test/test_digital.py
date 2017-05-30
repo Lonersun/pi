@@ -18,6 +18,7 @@ while True:
 
     temperature = htc_server.readTemperatureData()
     humidity = htc_server.readHumidityData()
+    print "当前温度：{0}, 湿度：{1}".format(temperature, humidity)
     show_temperature(temperature, humidity)
     time.sleep(5)
 
