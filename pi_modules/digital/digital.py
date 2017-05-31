@@ -2,7 +2,9 @@
 
 import RPi.GPIO
 import time
+from pi_modules import config
 from pi_modules.temperature import htu
+from pi_modules.lib import cache
 
 
 class Digital(object):
@@ -48,6 +50,8 @@ class Digital(object):
         RPi.GPIO.output(self.DIGIT4, True)
     
         RPi.GPIO.setup(btn, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_UP)
+
+        self.memcached = cache.init_memcached(config.MEMCACHED_SERVERS, config.MEMCACHED_KEY_PREFIX)
 
     def showDigit(self, no, num, showDotPoint):
         """
@@ -211,10 +215,19 @@ class Digital(object):
         """
         try:
             htc_server = htu.HTU21D()
-            t = 0.005
             while True:
                 temperature = htc_server.readTemperatureData()
                 humidity = htc_server.readHumidityData()
+                time.sleep(1)
+            t = 0.5
+            while True:
+                temperature = self.memcached.get("now_temperature")
+                humidity = self.memcached.get("now_humidity")
+                if not temperature or not humidity:
+                    temperature = htc_server.readTemperatureData()
+                    humidity = htc_server.readHumidityData()
+                    self.memcached.add("now_temperature", temperature, timeout=5)
+                    self.memcached.add("now_humidity", humidity, timeout=5)
                 print "当前温度：{0}, 湿度：{1}".format(temperature, humidity)
                 time.sleep(t)
                 self.showDigit(1, int(int(temperature) / 10), False)
