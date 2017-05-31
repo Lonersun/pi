@@ -4,7 +4,7 @@ import RPi.GPIO
 import time
 from pi_modules import config
 from pi_modules.temperature import htu
-from pi_modules.lib import cache
+from pi_modules.core import cache
 
 
 class Digital(object):

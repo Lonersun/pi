@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from werkzeug.local import LocalProxy
-from ..lib.cache import init_memcached
+from ..core.cache import init_memcached
 from .. import config as pi_config
 
 _memcached = None
