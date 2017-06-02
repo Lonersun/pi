@@ -17,6 +17,3 @@ from pi_modules.beep import beep
 beep_server = beep.Beep(21)
 result = beep_server.interval_beep(0.5, 10)
 print "蜂鸣结束"
-
-print "aaaa"
-
